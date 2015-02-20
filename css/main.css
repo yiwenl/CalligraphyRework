@@ -1,0 +1,18 @@
+html, body {
+	width:100%;
+	height:100%;
+	margin:0px;
+	padding:0px;
+}
+
+
+.canvas-calligraphy {
+	width:100%;
+	height:100%;
+	position: absolute;
+}
+
+
+.video-color {
+	display: none;
+}
