@@ -58,15 +58,24 @@ p._initTextures = function() {
 	this.fboDepth       = new FrameBuffer(window.innerWidth, window.innerHeight, o);
 	this.fboBlur        = new FrameBuffer(window.innerWidth, window.innerHeight, o);
 	this.fboDepthBlur   = new FrameBuffer(FBO_BLUR_SIZE, FBO_BLUR_SIZE);
+
+	var that = this;
+	window.addEventListener("keydown", function(e) {
+		if(e.keyCode == 67) that.clearAllStrokes();
+		else if(e.keyCode == 83) that.save();
+	})
 };
 
 
 p._initViews = function() {
+	console.log('Init Views');
 	this._vCopy        = new b.ViewCopy();
 	this._vRoom        = new ViewRoom();
-	this._vCalligraphy = new ViewCalligraphy(this.textureBrushes);
+	this._vCalligraphy = new ViewCalligraphy(this.textureBrushes, this);
 	this._vShadow      = new ViewShadow();
 	this._vPost        = new ViewPost();
+
+	this.strokes 		= [];
 
 	this._hBlur			= new ViewBlur("assets/shaders/HBlur.vert", "assets/shaders/blur.frag");
 	this._passHBlur 	= new Pass(this._hBlur, FBO_BLUR_SIZE, FBO_BLUR_SIZE);
@@ -90,6 +99,35 @@ p._initViews = function() {
 	this._composer.addPass(this._passVBlur);
 	this._composer.addPass(this._passHBlur1);
 	this._composer.addPass(this._passVBlur1);
+
+
+	this.btnClear = document.body.querySelector(".clear");
+	this.btnClear.addEventListener("click", this.clearAllStrokes.bind(this));
+
+	this.btnSave = document.body.querySelector(".save");
+	this.btnSave.addEventListener("click", this.save.bind(this));
+};
+
+
+p.createNewStroke = function() {
+	this.strokes.push(this._vCalligraphy);
+	this._vCalligraphy = new ViewCalligraphy(this.textureBrushes, this);
+	this._vCalligraphy.id = "c" + this.strokes.length;
+};
+
+p.clearAllStrokes = function() {
+	this._vCalligraphy.destroy();
+
+	this.strokes = [];
+	this._vCalligraphy = new ViewCalligraphy(this.textureBrushes, this);	
+	this._vCalligraphy.id = "c" + this.strokes.length;
+};
+
+
+p.save = function() {
+	this.render();
+	var dt = GL.canvas.toDataURL('image/jpeg');
+	this.btnSave.href = dt;
 };
 
 
@@ -112,6 +150,9 @@ p.render = function() {
 	this.fboBlur.bind();
 	GL.clear(0, 0, 0, 0);
 	GL.setViewport(0, 0, this.fboBlur.width, this.fboBlur.height);
+	for(var i=0; i<this.strokes.length;i++) {
+		this.strokes[i].render();
+	}
 	this._vCalligraphy.render();
 	this.fboBlur.unbind();
 	

@@ -19,7 +19,7 @@ var dist = function(p0, p1) {
 }
 
 function ViewCalligraphy(textures, main) {
-
+	
 	this.textures = textures;
 	this.texture = this.textures[Math.floor(Math.random()*this.textures.length)];
 	this.main = main;
@@ -29,6 +29,7 @@ function ViewCalligraphy(textures, main) {
 	this._particles = [];
 	this._points = [];
 	this._count = 0;
+	this._hasEnded = false;
 
 	bongiovi.View.call(this, "assets/shaders/calligraphy.vert", "assets/shaders/calligraphy.frag");
 }
@@ -42,6 +43,7 @@ p._init = function() {
 	var that = this;
 
 	GL.canvas.addEventListener("keydown", function(e){
+		if(that._hasEnded) return;
 		if ( e.shiftKey ) return;;
 		if(e.keyCode==82 && !that._isKeyDown) {
 			that._isKeyDown = true;
@@ -54,6 +56,7 @@ p._init = function() {
 
 
 	GL.canvas.addEventListener("mousedown", function(e){
+		if(that._hasEnded) return;
 		if ( e.shiftKey ) return;;
 		if(!that._isKeyDown) {
 			that._isKeyDown = true;
@@ -66,11 +69,15 @@ p._init = function() {
 
 	GL.canvas.addEventListener("keyup", function(e){
 		that._isKeyDown = false;
+		if(that._hasEnded) return;
 	});
 
 
-	GL.canvas.addEventListener("mouseup", function(e){
+	window.addEventListener("mouseup", function(e){
+		if(that._hasEnded) return;
+		that._hasEnded = true;
 		that._isKeyDown = false;
+		that.main.createNewStroke();
 	});
 
 
@@ -79,7 +86,9 @@ p._init = function() {
 
 
 p._onMouseMove = function(e) {
+	if(this._hasEnded) return;
 	if ( e.shiftKey ) return;
+
 	if(this._isKeyDown) {
 		var t = new Date().getTime() * .005;
 		var z = (Perlin.noise(t, PERLIN_SEED, 0) -.5 ) * 1000;
@@ -233,6 +242,11 @@ p.render = function(isBlack) {
 	this.shader.uniform("isBlack", "uniform1f", isBlack ? 1.0 : 0.0);
 	this.texture.bind(0);
 	GL.draw(this.mesh);
+};
+
+p.destroy = function() {
+	this._hasEnded = true;
+	this._particles = [];
 };
 
 module.exports = ViewCalligraphy;

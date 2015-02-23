@@ -16,3 +16,52 @@ html, body {
 .video-color {
 	display: none;
 }
+
+
+
+@font-face {
+  font-family: 'Museo100-Regular';
+  src: url('../assets/fonts/Museo100-Regular.eot?#iefix') format('embedded-opentype'),  url('../assets/fonts/Museo100-Regular.otf')  format('opentype'),
+	     url('../assets/fonts/Museo100-Regular.woff') format('woff'), url('../assets/fonts/Museo100-Regular.ttf')  format('truetype'), url('../assets/fonts/Museo100-Regular.svg#Museo100-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.button {
+	font-family: 'Museo100-Regular', Arial;
+	font-size: 14px;
+	position: absolute;
+	color:#000;
+	margin:35px;
+	opacity: .75;
+	z-index: 10;
+	cursor: pointer;
+
+	transition:all .5s ease-out;
+	-webkit-transition:all .5s ease-out;
+	-moz-transition:all .5s ease-out;
+	-o-transition:all .5s ease-out;
+}
+
+
+.button:hover {
+	opacity: 1;
+	color:#000;
+}
+
+.button.clear {
+	left:0px;
+	bottom:0px;
+}
+
+
+.button.save {
+	right:0px;
+	bottom:0px;
+}
+
+
+p, a {
+	-webkit-font-smoothing: antialiased;
+}
