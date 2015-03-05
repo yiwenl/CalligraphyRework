@@ -162,19 +162,16 @@ p._initTextures = function() {
 
 
 p._initViews = function() {
-	console.log('Init Views');
 	this._vCopy        = new b.ViewCopy();
 	this._vRoom        = new ViewRoom();
 	this._vCalligraphy = new ViewCalligraphy(this.textureBrushes, this);
 	this._vShadow      = new ViewShadow();
 	this._vPost        = new ViewPost();
-
-	this.strokes 		= [];
+	this.strokes       = [];
 
 	this._composer = new EffectComposer();
 	this._passTriBlur = new bongiovi.post.PassTriangleBlur(20);
 	this._composer.addPass(this._passTriBlur);
-
 
 	this.btnClear = document.body.querySelector(".clear");
 	this.btnClear.addEventListener("click", this.clearAllStrokes.bind(this));
@@ -212,6 +209,9 @@ p.render = function() {
 
 	// this._hBlur.selfOffset = this._vBlur.selfOffset = CalligraphyModel.params.selfShadow;
 	// this._hBlur.blur = this._vBlur.blur = CalligraphyModel.params.blur;
+
+	this._passTriBlur.value = CalligraphyModel.params.blur * 10;
+	
 	gl.disable(gl.DEPTH_TEST);
 	GL.setMatrices(this.cameraOtho);
 	GL.rotate(this.rotationFront);
