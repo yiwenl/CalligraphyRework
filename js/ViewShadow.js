@@ -17,7 +17,7 @@ p._init = function() {
 	var indices = [0,1,2,0,2,3];
 
 	var size = 1;
-	var offset = -1.2;
+	var offset = -1.5;
 	positions.push([-size, -size+offset, 0]);
 	positions.push([size, -size+offset, 0]);
 	positions.push([size, size+offset, 0]);

@@ -25,7 +25,7 @@ function SceneCalligraphy() {
 
 	bongiovi.Scene.call(this);
 
-	this.camera.setPerspective(90*Math.PI/180, window.innerWidth/window.innerHeight, 5, 3000);
+	this.camera.setPerspective(70*Math.PI/180, window.innerWidth/window.innerHeight, 5, 3000);
 	gl.disable(gl.DEPTH_TEST);
 	gl.disable(gl.CULL_FACE);
 	this.sceneRotation.lock(true);
@@ -77,28 +77,9 @@ p._initViews = function() {
 
 	this.strokes 		= [];
 
-	this._hBlur			= new ViewBlur("assets/shaders/HBlur.vert", "assets/shaders/blur.frag");
-	this._passHBlur 	= new Pass(this._hBlur, FBO_BLUR_SIZE, FBO_BLUR_SIZE);
-	this._vBlur			= new ViewBlur("assets/shaders/VBlur.vert", "assets/shaders/blur.frag");
-	this._passVBlur 	= new Pass(this._vBlur, FBO_BLUR_SIZE, FBO_BLUR_SIZE);
-
-	this._hBlur1		= new ViewBlur("assets/shaders/HBlur.vert", "assets/shaders/blur.frag");
-	this._passHBlur1 	= new Pass(this._hBlur, FBO_BLUR_SIZE, FBO_BLUR_SIZE);
-	this._vBlur1		= new ViewBlur("assets/shaders/VBlur.vert", "assets/shaders/blur.frag");
-	this._passVBlur1 	= new Pass(this._vBlur, FBO_BLUR_SIZE, FBO_BLUR_SIZE);
-
-
-	this._hBlur.blur = this._vBlur.blur = 1.2;
-	this._hBlur.selfOffset = this._vBlur.selfOffset = 2;
-
-	this._hBlur1.blur = this._vBlur1.blur = 1.0;
-	this._hBlur1.selfOffset = this._vBlur1.selfOffset = 1;
-
 	this._composer = new EffectComposer();
-	this._composer.addPass(this._passHBlur);
-	this._composer.addPass(this._passVBlur);
-	this._composer.addPass(this._passHBlur1);
-	this._composer.addPass(this._passVBlur1);
+	this._passTriBlur = new bongiovi.post.PassTriangleBlur(20);
+	this._composer.addPass(this._passTriBlur);
 
 
 	this.btnClear = document.body.querySelector(".clear");
@@ -135,9 +116,8 @@ p.render = function() {
 	//	UPDATE VIDEO TEXTURE
 	this._textureVideo.updateTexture(this._video);
 
-	this._hBlur.selfOffset = this._vBlur.selfOffset = CalligraphyModel.params.selfShadow;
-	this._hBlur.blur = this._vBlur.blur = CalligraphyModel.params.blur;
-
+	// this._hBlur.selfOffset = this._vBlur.selfOffset = CalligraphyModel.params.selfShadow;
+	// this._hBlur.blur = this._vBlur.blur = CalligraphyModel.params.blur;
 	gl.disable(gl.DEPTH_TEST);
 	GL.setMatrices(this.cameraOtho);
 	GL.rotate(this.rotationFront);

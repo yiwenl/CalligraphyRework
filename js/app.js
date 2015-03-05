@@ -1,7 +1,7 @@
 // app.js
 
-// require("./libs/bongiovi-min.js");
-require("./libs/bongiovi-compiled.js");
+require("./libs/bongiovi-min-post.js");
+// require("./libs/bongiovi-compiled.js");
 
 window.CalligraphyModel = {};
 
@@ -65,7 +65,7 @@ window.CalligraphyModel = {};
 		CalligraphyModel.params = {
 			selfShadow:1.7,
 			shadowAlpha:.44,
-			shadowScale:2.3,
+			shadowScale:4.0,
 			blur:1.4,
 			postOffset:0.25
 		};
@@ -73,7 +73,7 @@ window.CalligraphyModel = {};
 
 		gui.add(CalligraphyModel.params, "selfShadow", 0, 5);
 		gui.add(CalligraphyModel.params, "shadowAlpha", 0, 1).step(.01);
-		gui.add(CalligraphyModel.params, "shadowScale", 0, 3).step(.01);
+		gui.add(CalligraphyModel.params, "shadowScale", 0, 5).step(.01);
 		gui.add(CalligraphyModel.params, "blur", 0, 2).step(.01);
 		gui.add(CalligraphyModel.params, "postOffset", 0, 1).step(.01);
 	};
